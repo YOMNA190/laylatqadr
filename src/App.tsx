@@ -8,6 +8,8 @@ import { TasbeehCounter } from './sections/TasbeehCounter';
 import { ReflectionSection } from './sections/ReflectionSection';
 import { MotivationEngine } from './sections/MotivationEngine';
 import { ShareFeature } from './sections/ShareFeature';
+import { WishBox } from './sections/WishBox';
+import { PersonalStats } from './sections/PersonalStats';
 import { Footer } from './sections/Footer';
 import './App.css';
 
@@ -77,6 +79,12 @@ function App() {
 
         {/* Motivation Engine */}
         <MotivationEngine />
+
+        {/* Wish Box */}
+        <WishBox />
+
+        {/* Personal Stats */}
+        <PersonalStats />
 
         {/* Share Feature */}
         <ShareFeature />

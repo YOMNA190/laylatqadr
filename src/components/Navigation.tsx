@@ -7,6 +7,8 @@ const navItems = [
   { label: 'العشر الأواخر', href: '#timeline' },
   { label: 'المسبحة', href: '#tasbeeh' },
   { label: 'الخواطر', href: '#reflection' },
+  { label: 'الأمنيات', href: '#wishbox' },
+  { label: 'الإحصائيات', href: '#stats' },
   { label: 'المشاركة', href: '#share' },
 ];
 
@@ -53,13 +55,13 @@ export function Navigation() {
               </a>
 
               {/* Desktop Navigation */}
-              <div className="hidden md:flex items-center gap-6">
+              <div className="hidden lg:flex items-center gap-4">
                 {navItems.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
                     onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                    className="text-white/70 hover:text-gold transition-colors text-sm"
+                    className="text-white/70 hover:text-gold transition-colors text-xs whitespace-nowrap"
                   >
                     {item.label}
                   </a>
