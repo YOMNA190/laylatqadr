@@ -12,4 +12,29 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor': ['react', 'react-dom'],
+          'ui-components': [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-scroll-area',
+          ],
+          'utils': [
+            'html-to-image',
+            'qrcode.react',
+            'lucide-react',
+            'clsx',
+            'tailwind-merge',
+          ],
+          'dua-data': ['./src/lib/duaData.ts'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 });

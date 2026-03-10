@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2 } from 'lucide-react';
+import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2, ChevronDown } from 'lucide-react';
 import { allDuas, duaCategories, categoryComments, categoryImages } from '../lib/duaData';
 import { DuaStoryCard } from '../components/DuaStoryCard';
 
 const defaultBg = "/images/hero-bg.jpg";
+const DUAS_PER_PAGE = 8; // عرض 8 أدعية فقط في البداية
 
 export function ReflectionSection() {
   const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string; bgImage?: string } | null>(null);
@@ -15,6 +16,7 @@ export function ReflectionSection() {
   const [showSaved, setShowSaved] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
+  const [displayedCount, setDisplayedCount] = useState(DUAS_PER_PAGE);
 
   const handleSave = useCallback(() => {
     setShowSaved(true);
@@ -39,8 +41,15 @@ export function ReflectionSection() {
     });
   }, [searchQuery, selectedCategory]);
 
+  const displayedDuas = filteredDuas.slice(0, displayedCount);
+  const hasMore = displayedCount < filteredDuas.length;
+
   const addDuaToReflection = (duaText: string) => {
     setReflection((prev) => prev + (prev ? '\n\n' : '') + duaText);
+  };
+
+  const loadMore = () => {
+    setDisplayedCount(prev => prev + DUAS_PER_PAGE);
   };
 
   return (
@@ -134,7 +143,7 @@ export function ReflectionSection() {
             </div>
           </div>
 
-          {/* Right Side: Dua Encyclopedia with Tabs */}
+          {/* Right Side: Dua Encyclopedia with Pagination */}
           <div className={`transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <div className="glass-strong rounded-3xl p-6 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-6">
@@ -151,7 +160,10 @@ export function ReflectionSection() {
                   type="text"
                   placeholder="ابحث عن دعاء..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setDisplayedCount(DUAS_PER_PAGE); // إعادة تعيين العداد عند البحث
+                  }}
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pr-10 pl-4 text-white focus:border-gold/50 outline-none transition-colors"
                   dir="rtl"
                 />
@@ -161,7 +173,10 @@ export function ReflectionSection() {
               <div className="relative mb-6 group">
                 <div className="flex overflow-x-auto custom-scrollbar gap-2 pb-2 mask-fade-edges">
                   <button
-                    onClick={() => setSelectedCategory('الكل')}
+                    onClick={() => {
+                      setSelectedCategory('الكل');
+                      setDisplayedCount(DUAS_PER_PAGE);
+                    }}
                     className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === 'الكل' ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
                   >
                     الكل
@@ -169,7 +184,10 @@ export function ReflectionSection() {
                   {duaCategories.map(cat => (
                     <button
                       key={cat}
-                      onClick={() => setSelectedCategory(cat)}
+                      onClick={() => {
+                        setSelectedCategory(cat);
+                        setDisplayedCount(DUAS_PER_PAGE);
+                      }}
                       className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === cat ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
                     >
                       {cat}
@@ -185,60 +203,68 @@ export function ReflectionSection() {
                 </div>
               )}
 
-              {/* Dua List with Image Backgrounds */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2 max-h-[500px]">
-                {filteredDuas.length > 0 ? (
-                  filteredDuas.map((dua) => (
-                    <div
-                      key={dua.id}
-                      className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-gold/50 transition-all duration-500 cursor-pointer group"
-                      onClick={() => addDuaToReflection(dua.text)}
-                    >
-                      {/* Image Background */}
-                      <div 
-                        className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-110"
-                        style={{
-                          backgroundImage: `url(${categoryImages[dua.category] || defaultBg})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                        }}
-                      />
-                      {/* Dark Overlay */}
-                      <div className="absolute inset-0 z-10 bg-black/70 group-hover:bg-black/60 transition-colors duration-500" />
-                      
-                      <div className="relative z-20 p-5">
-                        <div className="flex justify-between items-start gap-4 mb-3">
-                          <p className="text-white font-amiri text-xl group-hover:text-gold transition-colors leading-relaxed flex-1 drop-shadow-lg" dir="rtl">
-                            {dua.text}
-                          </p>
-                          <button 
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setActiveStoryDua({ 
-                                text: dua.text, 
-                                category: dua.category,
-                                bgImage: categoryImages[dua.category]
-                              });
-                            }}
-                            className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
-                            title="مشاركة كصورة"
-                          >
-                            <Share2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gold/60 text-xs font-amiri px-2 py-0.5 rounded-full bg-gold/5 border border-gold/10">
-                            {dua.category}
-                          </span>
-                          {dua.source && (
-                            <span className="text-white/40 text-[10px] italic">
-                              المصدر: {dua.source}
+              {/* Dua List with Pagination */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2">
+                {displayedDuas.length > 0 ? (
+                  <>
+                    {displayedDuas.map((dua) => (
+                      <div
+                        key={dua.id}
+                        className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-gold/50 transition-all duration-500 cursor-pointer group"
+                        onClick={() => addDuaToReflection(dua.text)}
+                      >
+                        {/* Image Background */}
+                        <div 
+                          className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-110"
+                          style={{
+                            backgroundImage: `url(${categoryImages[dua.category] || defaultBg})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                          }}
+                        />
+                        {/* Dark Overlay */}
+                        <div className="absolute inset-0 z-10 bg-black/70 group-hover:bg-black/60 transition-colors duration-500" />
+                        
+                        <div className="relative z-20 p-5">
+                          <div className="flex justify-between items-start gap-4 mb-3">
+                            <p className="text-white font-amiri text-lg leading-relaxed flex-1 drop-shadow-lg" dir="rtl">
+                              {dua.text}
+                            </p>
+                            <button 
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setActiveStoryDua({ 
+                                  text: dua.text, 
+                                  category: dua.category,
+                                  bgImage: categoryImages[dua.category]
+                                });
+                              }}
+                              className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all flex-shrink-0"
+                              title="مشاركة كصورة"
+                            >
+                              <Share2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-gold/60 text-xs font-amiri px-2 py-0.5 rounded-full bg-gold/5 border border-gold/10">
+                              {dua.category}
                             </span>
-                          )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+
+                    {/* Load More Button */}
+                    {hasMore && (
+                      <button
+                        onClick={loadMore}
+                        className="w-full mt-6 py-3 px-4 rounded-2xl bg-gold/10 text-gold hover:bg-gold/20 transition-all flex items-center justify-center gap-2 border border-gold/20"
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                        عرض المزيد ({filteredDuas.length - displayedCount} متبقي)
+                      </button>
+                    )}
+                  </>
                 ) : (
                   <div className="text-center py-12 text-white/40">
                     <p>لا توجد أدعية تطابق بحثك</p>
