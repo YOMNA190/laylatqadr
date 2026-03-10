@@ -1,7 +1,28 @@
-import { Moon, Heart, Sparkles } from 'lucide-react';
+import { Moon, Heart, Sparkles, HeartHandshake } from 'lucide-react';
 
-export function Footer() {
+interface FooterProps {
+  activeTab?: string;
+  onTabChange?: (tab: string) => void;
+}
+
+const footerLinks = [
+  { label: 'رحلة العبادة', tab: 'worship' },
+  { label: 'العشر الأواخر', tab: 'timeline' },
+  { label: 'ختم القرآن', tab: 'khatma' },
+  { label: 'المسبحة', tab: 'tasbeeh' },
+  { label: 'الأدعية', tab: 'duas' },
+  { label: 'أرسل دعاءك', tab: 'community' },
+];
+
+export function Footer({ activeTab = 'home', onTabChange }: FooterProps) {
   const currentYear = new Date().getFullYear();
+
+  const handleTabClick = (tab: string) => {
+    if (onTabChange) {
+      onTabChange(tab);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <footer className="relative py-16 overflow-hidden">
@@ -47,31 +68,34 @@ export function Footer() {
         </div>
 
         {/* Links */}
-        <div className="flex justify-center gap-8 mb-8 flex-wrap">
-          <a 
-            href="#worship" 
-            className="text-white/50 hover:text-gold transition-colors text-sm"
-          >
-            رحلة العبادة
-          </a>
-          <a 
-            href="#timeline" 
-            className="text-white/50 hover:text-gold transition-colors text-sm"
-          >
-            العشر الأواخر
-          </a>
-          <a 
-            href="#tasbeeh" 
-            className="text-white/50 hover:text-gold transition-colors text-sm"
-          >
-            المسبحة
-          </a>
-          <a 
-            href="#reflection" 
-            className="text-white/50 hover:text-gold transition-colors text-sm"
-          >
-            الخواطر
-          </a>
+        <div className="flex justify-center gap-4 mb-8 flex-wrap">
+          {footerLinks.map((link) => (
+            <button
+              key={link.tab}
+              onClick={() => handleTabClick(link.tab)}
+              className={`text-sm transition-all duration-300 px-3 py-1 rounded-lg ${
+                activeTab === link.tab
+                  ? 'text-gold bg-gold/10'
+                  : 'text-white/50 hover:text-gold hover:bg-gold/5'
+              }`}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+
+        {/* Dua for Yumna */}
+        <div className="mb-8">
+          <div className="glass-strong rounded-2xl p-6 text-center border border-gold/20">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <HeartHandshake className="w-5 h-5 text-gold" />
+              <span className="text-gold/80 font-amiri text-sm">دعاء خاص</span>
+              <HeartHandshake className="w-5 h-5 text-gold" />
+            </div>
+            <p className="text-gold font-amiri text-lg leading-relaxed">
+              يا رب يمنى تدخل الجنة وتبقي مليونيرة وتحققي كل أحلامك وتكوني أسعد إنسانة في الدنيا والآخرة
+            </p>
+          </div>
         </div>
 
         {/* Copyright */}

@@ -60,6 +60,11 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab as TabType);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   // Keyboard shortcut for tasbeeh counter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -99,7 +104,7 @@ function App() {
       <Particles />
 
       {/* Navigation */}
-      <Navigation />
+      <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* Personalized Dua Banner */}
       {isScrolled && showBanner && (
@@ -132,7 +137,7 @@ function App() {
 
         {/* Footer */}
         <Suspense fallback={null}>
-          <Footer />
+          <Footer activeTab={activeTab} onTabChange={handleTabChange} />
         </Suspense>
       </main>
 

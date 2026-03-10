@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2, ChevronDown } from 'lucide-react';
+import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2, ChevronDown, Copy, Check, Heart } from 'lucide-react';
 import { allDuas, duaCategories, categoryComments, categoryImages } from '../lib/duaData';
 import { DuaStoryCard } from '../components/DuaStoryCard';
 
 const defaultBg = "/images/hero-bg.jpg";
-const DUAS_PER_PAGE = 8; // عرض 8 أدعية فقط في البداية
+const DUAS_PER_PAGE = 8;
 
 export function ReflectionSection() {
   const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string; bgImage?: string } | null>(null);
@@ -17,6 +17,8 @@ export function ReflectionSection() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('الكل');
   const [displayedCount, setDisplayedCount] = useState(DUAS_PER_PAGE);
+  const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [favoriteDuas, setFavoriteDuas] = useLocalStorage<number[]>('laylatul-qadr-favorite-duas', []);
 
   const handleSave = useCallback(() => {
     setShowSaved(true);
@@ -52,6 +54,23 @@ export function ReflectionSection() {
     setDisplayedCount(prev => prev + DUAS_PER_PAGE);
   };
 
+  const copyDua = (duaText: string, duaId: number) => {
+    navigator.clipboard.writeText(duaText);
+    setCopiedId(duaId);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const toggleFavorite = (duaId: number) => {
+    setFavoriteDuas((prev) => {
+      if (prev.includes(duaId)) {
+        return prev.filter(id => id !== duaId);
+      }
+      return [...prev, duaId];
+    });
+  };
+
+  const totalDuas = allDuas.length;
+
   return (
     <section ref={ref} className="section-spiritual relative py-24" id="reflection">
       {/* Background */}
@@ -79,6 +98,22 @@ export function ReflectionSection() {
           <p className="text-white/60 text-lg max-w-2xl mx-auto">
             اكتب دعواتك الخاصة، أو اختر من موسوعة الأدعية الشاملة لتملأ ليلتك بالذكر والخشوع
           </p>
+          
+          {/* Stats */}
+          <div className="mt-6 flex justify-center gap-6">
+            <div className="glass rounded-xl px-4 py-2">
+              <span className="text-gold font-bold">{totalDuas}</span>
+              <span className="text-white/60 text-sm mr-2">دعاء</span>
+            </div>
+            <div className="glass rounded-xl px-4 py-2">
+              <span className="text-gold font-bold">{duaCategories.length}</span>
+              <span className="text-white/60 text-sm mr-2">تصنيف</span>
+            </div>
+            <div className="glass rounded-xl px-4 py-2">
+              <span className="text-gold font-bold">{favoriteDuas.length}</span>
+              <span className="text-white/60 text-sm mr-2">مفضلة</span>
+            </div>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -162,7 +197,7 @@ export function ReflectionSection() {
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
-                    setDisplayedCount(DUAS_PER_PAGE); // إعادة تعيين العداد عند البحث
+                    setDisplayedCount(DUAS_PER_PAGE);
                   }}
                   className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pr-10 pl-4 text-white focus:border-gold/50 outline-none transition-colors"
                   dir="rtl"
@@ -202,14 +237,13 @@ export function ReflectionSection() {
               )}
 
               {/* Dua List with Pagination */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2">
+              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2 max-h-[600px]">
                 {displayedDuas.length > 0 ? (
                   <>
                     {displayedDuas.map((dua) => (
                       <div
                         key={dua.id}
-                        className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-gold/50 transition-all duration-500 cursor-pointer group"
-                        onClick={() => addDuaToReflection(dua.text)}
+                        className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-gold/50 transition-all duration-500 group"
                       >
                         {/* Image Background */}
                         <div 
@@ -228,25 +262,59 @@ export function ReflectionSection() {
                             <p className="text-white font-amiri text-lg leading-relaxed flex-1 drop-shadow-lg" dir="rtl">
                               {dua.text}
                             </p>
-                            <button 
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setActiveStoryDua({ 
-                                  text: dua.text, 
-                                  category: dua.category,
-                                  bgImage: categoryImages[dua.category]
-                                });
-                              }}
-                              className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all flex-shrink-0"
-                              title="مشاركة كصورة"
-                            >
-                              <Share2 className="w-4 h-4" />
-                            </button>
                           </div>
-                          <div className="flex items-center gap-2">
+                          
+                          {/* Action Buttons */}
+                          <div className="flex items-center justify-between">
                             <span className="text-gold/60 text-xs font-amiri px-2 py-0.5 rounded-full bg-gold/5 border border-gold/10">
                               {dua.category}
                             </span>
+                            
+                            <div className="flex items-center gap-2">
+                              {/* Add to Reflection */}
+                              <button
+                                onClick={() => addDuaToReflection(dua.text)}
+                                className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
+                                title="إضافة للمفكرة"
+                              >
+                                <PenLine className="w-4 h-4" />
+                              </button>
+                              
+                              {/* Copy */}
+                              <button
+                                onClick={() => copyDua(dua.text, dua.id)}
+                                className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
+                                title="نسخ"
+                              >
+                                {copiedId === dua.id ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                              
+                              {/* Favorite */}
+                              <button
+                                onClick={() => toggleFavorite(dua.id)}
+                                className={`p-2 rounded-full transition-all ${
+                                  favoriteDuas.includes(dua.id)
+                                    ? 'bg-gold text-black'
+                                    : 'bg-gold/10 text-gold hover:bg-gold hover:text-black'
+                                }`}
+                                title="مفضل"
+                              >
+                                <Heart className={`w-4 h-4 ${favoriteDuas.includes(dua.id) ? 'fill-black' : ''}`} />
+                              </button>
+                              
+                              {/* Share */}
+                              <button 
+                                onClick={() => setActiveStoryDua({ 
+                                  text: dua.text, 
+                                  category: dua.category,
+                                  bgImage: categoryImages[dua.category]
+                                })}
+                                className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
+                                title="مشاركة كصورة"
+                              >
+                                <Share2 className="w-4 h-4" />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>

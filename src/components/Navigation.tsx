@@ -1,22 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Moon, Menu, X } from 'lucide-react';
 
+interface NavigationProps {
+  activeTab: string;
+  onTabChange: (tab: string) => void;
+}
+
 const navItems = [
-  { label: 'الرئيسية', href: '#home' },
-  { label: 'رحلة العبادة', href: '#worship' },
-  { label: 'عشر أفكار', href: '#ideas' },
-  { label: 'العشر الأواخر', href: '#timeline' },
-  { label: 'ختم القرآن', href: '#khatma' },
-  { label: 'المسبحة', href: '#tasbeeh' },
-  { label: 'الأدعية', href: '#duas' },
-  { label: 'أرسل دعاءك', href: '#community-duas' },
-  { label: 'التحفيز', href: '#motivation' },
-  { label: 'الأمنيات', href: '#wishes' },
-  { label: 'الإحصائيات', href: '#stats' },
-  { label: 'المشاركة', href: '#share' },
+  { label: 'الرئيسية', tab: 'home' },
+  { label: 'رحلة العبادة', tab: 'worship' },
+  { label: 'عشر أفكار', tab: 'ideas' },
+  { label: 'العشر الأواخر', tab: 'timeline' },
+  { label: 'ختم القرآن', tab: 'khatma' },
+  { label: 'المسبحة', tab: 'tasbeeh' },
+  { label: 'الأدعية', tab: 'duas' },
+  { label: 'أرسل دعاءك', tab: 'community' },
+  { label: 'التحفيز', tab: 'motivation' },
+  { label: 'الأمنيات', tab: 'wishes' },
+  { label: 'الإحصائيات', tab: 'stats' },
+  { label: 'المشاركة', tab: 'share' },
 ];
 
-export function Navigation() {
+export function Navigation({ activeTab, onTabChange }: NavigationProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -29,7 +34,14 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleTabClick = (tab: string) => {
+    onTabChange(tab);
+    setIsMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const scrollToTop = () => {
+    onTabChange('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsMobileMenuOpen(false);
   };
@@ -56,16 +68,19 @@ export function Navigation() {
               </a>
 
               {/* Desktop Navigation */}
-              <div className="hidden lg:flex items-center gap-2">
+              <div className="hidden lg:flex items-center gap-1">
                 {navItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    onClick={(e) => { e.preventDefault(); scrollToTop(); }}
-                    className="text-white/70 hover:text-gold transition-colors text-xs whitespace-nowrap px-3 py-1 rounded-lg hover:bg-gold/10"
+                  <button
+                    key={item.tab}
+                    onClick={() => handleTabClick(item.tab)}
+                    className={`text-xs whitespace-nowrap px-3 py-2 rounded-lg transition-all duration-300 ${
+                      activeTab === item.tab
+                        ? 'bg-gold text-black font-semibold'
+                        : 'text-white/70 hover:text-gold hover:bg-gold/10'
+                    }`}
                   >
                     {item.label}
-                  </a>
+                  </button>
                 ))}
               </div>
 
@@ -84,19 +99,22 @@ export function Navigation() {
         <div
           className={`
             md:hidden mx-4 mt-2 rounded-2xl overflow-hidden transition-all duration-300
-            ${isMobileMenuOpen ? 'opacity-100 max-h-96' : 'opacity-0 max-h-0'}
+            ${isMobileMenuOpen ? 'opacity-100 max-h-[500px]' : 'opacity-0 max-h-0'}
           `}
         >
-          <div className="glass-strong p-4 space-y-2">
+          <div className="glass-strong p-4 space-y-1 max-h-[400px] overflow-y-auto custom-scrollbar">
             {navItems.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={(e) => { e.preventDefault(); scrollToTop(); }}
-                className="block py-2 px-4 rounded-lg text-white/70 hover:text-gold hover:bg-gold/10 transition-colors text-sm"
+              <button
+                key={item.tab}
+                onClick={() => handleTabClick(item.tab)}
+                className={`w-full text-right py-3 px-4 rounded-lg transition-all text-sm ${
+                  activeTab === item.tab
+                    ? 'bg-gold text-black font-semibold'
+                    : 'text-white/70 hover:text-gold hover:bg-gold/10'
+                }`}
               >
                 {item.label}
-              </a>
+              </button>
             ))}
           </div>
         </div>
