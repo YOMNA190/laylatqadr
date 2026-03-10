@@ -10,9 +10,17 @@ interface ShareButtonsProps {
   className?: string;
 }
 
+const creativeMessages = [
+  "في ليلة القدر، كل دعاء مستجاب.. اكتشفي أدعية جميلة وتابعي عباداتك معنا 🌙✨",
+  "رسالة من الله لقلبك في جوف الليل.. ادخلي واقرئي الأدعية المختارة 🤲💫",
+  "خبأت لكِ موقعاً روحانياً جميلاً لليلة القدر.. ادخلي واستمتعي بالأدعية والتسبيح 🕯️🌟",
+  "نوري ليلتك بذكر الله وادعي معي في هذا الموقع الرائع.. 🌙💚",
+  "اغتنمي فضل ليلة القدر معنا بأدعية جميلة وتسبيح وتتبع للعبادات 🌟🤲",
+];
+
 export function ShareButtons({
   title = 'ليلة القدر 2026',
-  text = 'قال رسول الله ﷺ: "مَنْ قَامَ لَيْلَةَ الْقَدْرِ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ".\n\nاكتشف أدعية ليلة القدر وتابع عباداتك عبر موقع ليلة القدر:',
+  text = creativeMessages[Math.floor(Math.random() * creativeMessages.length)],
   url = 'https://laylatqadr.vercel.app/',
   showLabel = true,
   className = '',
@@ -73,7 +81,7 @@ export function ShareButtons({
   }, [url]);
 
   const handleNativeShare = useCallback(async () => {
-    if (typeof navigator !== 'undefined' && navigator.share) {
+    if (typeof navigator !== 'undefined' && 'share' in navigator) {
       try {
         await navigator.share({
           title,
