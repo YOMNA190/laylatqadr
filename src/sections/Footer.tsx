@@ -47,7 +47,7 @@ export function Footer() {
         </div>
 
         {/* Links */}
-        <div className="flex justify-center gap-8 mb-8">
+        <div className="flex justify-center gap-8 mb-8 flex-wrap">
           <a 
             href="#worship" 
             className="text-white/50 hover:text-gold transition-colors text-sm"
@@ -84,14 +84,20 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Special Dua for Yumna */}
-        <div className="mt-8 text-center">
-          <p className="text-gold text-lg font-amiri font-bold animate-pulse">
-            اللهم الخير والثراء الفاحش ليُمنى 💚✨
-          </p>
-          <p className="text-gold/60 text-xs font-amiri mt-2">
-            اللهم تقبل منا صالح الأعمال
-          </p>
+        {/* Special Dua for Yomna */}
+        <div className="mt-12 text-center">
+          <div className="inline-block bg-gradient-to-r from-gold/20 to-gold/10 rounded-3xl p-8 border border-gold/30 max-w-2xl">
+            <p className="text-gold text-sm font-amiri mb-3 opacity-80">دعاء خاص</p>
+            <p className="text-gold text-2xl font-amiri font-bold mb-4 animate-pulse">
+              اللهم يا ودود يا ودود
+            </p>
+            <p className="text-gold/90 text-lg font-amiri leading-relaxed mb-4">
+              اللهم يا رب الأرباب، يا ملك الملوك، يا ذا الجلال والإكرام، أسألك بأسمائك الحسنى وصفاتك العليا أن تحفظ يُمنى وتحميها، وأن تملأ قلبها بالسعادة والطمأنينة، وأن ترزقها رزقاً واسعاً حلالاً طيباً من حيث لا تحتسب، وأن تجعل كل خطواتها خطوات موفقة نحو الخير والسعادة.
+            </p>
+            <p className="text-gold/70 text-sm font-amiri italic">
+              اللهم آمين آمين يا رب العالمين
+            </p>
+          </div>
         </div>
       </div>
     </footer>

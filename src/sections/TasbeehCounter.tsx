@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { adhkarBenefits } from '../lib/duaData';
 import { RotateCcw, Hand, Sparkles } from 'lucide-react';
 
 interface Dhikr {
@@ -14,6 +15,7 @@ const adhkar: Dhikr[] = [
   { id: 'subhanallah', text: 'سبحان الله', meaning: 'المجد لله', target: 33 },
   { id: 'alhamdulillah', text: 'الحمد لله', meaning: 'الحمد لله', target: 33 },
   { id: 'allahuakbar', text: 'الله أكبر', meaning: 'الله أعظم', target: 34 },
+  { id: 'istighfar', text: 'أستغفر الله', meaning: 'أطلب المغفرة من الله', target: 100 },
 ];
 
 export function TasbeehCounter() {
@@ -29,6 +31,7 @@ export function TasbeehCounter() {
 
   const currentCount = counts[activeDhikr] || 0;
   const currentDhikr = adhkar.find((d) => d.id === activeDhikr) || adhkar[0];
+  const currentDhikrBenefit = adhkarBenefits[activeDhikr];
 
   const increment = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -135,6 +138,12 @@ export function TasbeehCounter() {
           <div className="glass-strong rounded-3xl p-8 text-center">
             {/* Dhikr Text */}
             <p className="text-gold/60 text-sm mb-2">{currentDhikr.meaning}</p>
+            {currentDhikrBenefit && (
+              <div className="mt-4 p-4 bg-gold/10 rounded-xl text-gold/80 text-sm font-amiri leading-relaxed">
+                <p className="font-bold mb-2">فضل {currentDhikr.text}:</p>
+                <p>\"{currentDhikrBenefit.hadith}\" <span className="italic text-gold/60">({currentDhikrBenefit.source})</span></p>
+              </div>
+            )}
             <h3 className="text-4xl md:text-5xl font-bold text-gold font-amiri mb-6">
               {currentDhikr.text}
             </h3>
