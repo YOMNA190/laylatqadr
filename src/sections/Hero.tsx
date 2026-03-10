@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import { Sparkles, Moon } from 'lucide-react';
 
 interface HeroProps {
-  onBegin: () => void;
+  onBegin?: () => void;
 }
 
-export function Hero({ onBegin }: HeroProps) {
+export function Hero({ onBegin = () => {} }: HeroProps) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [stars, setStars] = useState<Array<{ id: number; x: number; y: number; size: number; delay: number }>>([]);
 

@@ -1,17 +1,19 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { Navigation } from './components/Navigation';
 import { Particles } from './components/Particles';
 import { Hero } from './sections/Hero';
-import { WorshipTracker } from './sections/WorshipTracker';
-import { NightTimeline } from './sections/NightTimeline';
-import { TasbeehCounter } from './sections/TasbeehCounter';
-import { ReflectionSection } from './sections/ReflectionSection';
-import { MotivationEngine } from './sections/MotivationEngine';
-import { ShareFeature } from './sections/ShareFeature';
-import { WishBox } from './sections/WishBox';
-import { PersonalStats } from './sections/PersonalStats';
-import { QuranKhatma } from './sections/QuranKhatma';
-import { Footer } from './sections/Footer';
+
+// Lazy load heavy components
+const WorshipTracker = lazy(() => import('./sections/WorshipTracker').then(m => ({ default: m.WorshipTracker })));
+const NightTimeline = lazy(() => import('./sections/NightTimeline').then(m => ({ default: m.NightTimeline })));
+const TasbeehCounter = lazy(() => import('./sections/TasbeehCounter').then(m => ({ default: m.TasbeehCounter })));
+const ReflectionSection = lazy(() => import('./sections/ReflectionSection').then(m => ({ default: m.ReflectionSection })));
+const MotivationEngine = lazy(() => import('./sections/MotivationEngine').then(m => ({ default: m.MotivationEngine })));
+const ShareFeature = lazy(() => import('./sections/ShareFeature').then(m => ({ default: m.ShareFeature })));
+const WishBox = lazy(() => import('./sections/WishBox').then(m => ({ default: m.WishBox })));
+const PersonalStats = lazy(() => import('./sections/PersonalStats').then(m => ({ default: m.PersonalStats })));
+const QuranKhatma = lazy(() => import('./sections/QuranKhatma').then(m => ({ default: m.QuranKhatma })));
+const Footer = lazy(() => import('./sections/Footer').then(m => ({ default: m.Footer })));
 import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift } from 'lucide-react';
 import './App.css';
 
@@ -21,8 +23,15 @@ interface Tab {
   id: TabType;
   label: string;
   icon: React.ElementType;
-  component: React.ComponentType;
+  component: React.ComponentType<any>;
 }
+
+// Loading fallback component
+const LoadingFallback = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gold"></div>
+  </div>
+);
 
 const tabs: Tab[] = [
   { id: 'home', label: 'الرئيسية', icon: Moon, component: Hero },
@@ -86,11 +95,15 @@ function App() {
       <main className="relative z-10">
         {/* Active Tab Content */}
         <div className="min-h-screen">
-          <ActiveComponent />
+          <Suspense fallback={<LoadingFallback />}>
+            <ActiveComponent />
+          </Suspense>
         </div>
 
         {/* Footer */}
-        <Footer />
+        <Suspense fallback={null}>
+          <Footer />
+        </Suspense>
       </main>
 
       {/* Bottom Tab Navigation */}
