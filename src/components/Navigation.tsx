@@ -8,6 +8,7 @@ const navItems = [
   { label: 'ختم القرآن', href: '#khatma' },
   { label: 'المسبحة', href: '#tasbeeh' },
   { label: 'الأدعية', href: '#duas' },
+  { label: 'أرسل دعاءك', href: '#community-duas' },
   { label: 'التحفيز', href: '#motivation' },
   { label: 'الأمنيات', href: '#wishes' },
   { label: 'الإحصائيات', href: '#stats' },

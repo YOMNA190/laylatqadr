@@ -14,10 +14,11 @@ const WishBox = lazy(() => import('./sections/WishBox').then(m => ({ default: m.
 const PersonalStats = lazy(() => import('./sections/PersonalStats').then(m => ({ default: m.PersonalStats })));
 const QuranKhatma = lazy(() => import('./sections/QuranKhatma').then(m => ({ default: m.QuranKhatma })));
 const Footer = lazy(() => import('./sections/Footer').then(m => ({ default: m.Footer })));
-import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift } from 'lucide-react';
+const CommunityDuas = lazy(() => import('./sections/CommunityDuas').then(m => ({ default: m.CommunityDuas })));
+import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift, MessageSquare } from 'lucide-react';
 import './App.css';
 
-type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'motivation' | 'wishes' | 'stats' | 'share';
+type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'community' | 'motivation' | 'wishes' | 'stats' | 'share';
 
 interface Tab {
   id: TabType;
@@ -40,6 +41,7 @@ const tabs: Tab[] = [
   { id: 'khatma', label: 'ختم القرآن', icon: BookOpen, component: QuranKhatma },
   { id: 'tasbeeh', label: 'المسبحة', icon: Zap, component: TasbeehCounter },
   { id: 'duas', label: 'الأدعية', icon: BookOpen, component: ReflectionSection },
+  { id: 'community', label: 'أرسل دعاءك', icon: MessageSquare, component: CommunityDuas },
   { id: 'motivation', label: 'التحفيز', icon: Heart, component: MotivationEngine },
   { id: 'wishes', label: 'الأمنيات', icon: Gift, component: WishBox },
   { id: 'stats', label: 'الإحصائيات', icon: BarChart3, component: PersonalStats },
