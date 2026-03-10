@@ -1,1 +1,1 @@
-{"scripts": {"build": "echo Skip build"}}
+{"name": "laylatqadr","version": "1.0.0","scripts": {"build": "mkdir -p .vercel/output/static && cp -r * .vercel/output/static || true","install": "echo No dependencies needed"}}
