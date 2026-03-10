@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2 } from 'lucide-react';
-import { allDuas, duaCategories } from '../lib/duaData';
+import { allDuas, duaCategories, categoryComments } from '../lib/duaData';
 import { DuaStoryCard } from '../components/DuaStoryCard';
 
 export function ReflectionSection() {
@@ -154,23 +154,29 @@ export function ReflectionSection() {
                   />
                 </div>
                 
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    onClick={() => setSelectedCategory('الكل')}
-                    className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === 'الكل' ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
-                  >
-                    الكل
-                  </button>
-                  {duaCategories.map(cat => (
+                  <div className="flex flex-wrap gap-2">
                     <button
-                      key={cat}
-                      onClick={() => setSelectedCategory(cat)}
-                      className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === cat ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                      onClick={() => setSelectedCategory('الكل')}
+                      className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === 'الكل' ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
                     >
-                      {cat}
+                      الكل
                     </button>
-                  ))}
-                </div>
+                    {duaCategories.map(cat => (
+                      <button
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === cat ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                      >
+                        {cat}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {selectedCategory !== 'الكل' && categoryComments[selectedCategory] && (
+                    <div className="mt-2 text-gold/80 text-sm font-amiri italic animate-fade-in">
+                      ✨ {categoryComments[selectedCategory]}
+                    </div>
+                  )}
               </div>
 
               {/* Dua List */}

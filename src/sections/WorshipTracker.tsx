@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { 
@@ -61,7 +61,17 @@ const tasks: Task[] = [
 export function WorshipTracker() {
   const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const [completedTasks, setCompletedTasks] = useLocalStorage<string[]>('laylatul-qadr-tasks', []);
+  const [lastResetDate, setLastResetDate] = useLocalStorage<string>('laylatul-qadr-last-reset', '');
   const [justCompleted, setJustCompleted] = useState<string | null>(null);
+
+  // Daily reset logic
+  useEffect(() => {
+    const today = new Date().toLocaleDateString('en-US'); // Use a stable date format
+    if (lastResetDate !== today) {
+      setCompletedTasks([]);
+      setLastResetDate(today);
+    }
+  }, [lastResetDate, setCompletedTasks, setLastResetDate]);
 
   const toggleTask = useCallback((taskId: string) => {
     setCompletedTasks((prev) => {
