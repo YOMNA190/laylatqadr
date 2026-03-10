@@ -1,9 +1,29 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2 } from 'lucide-react';
+import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { allDuas, duaCategories, categoryComments } from '../lib/duaData';
 import { DuaStoryCard } from '../components/DuaStoryCard';
+
+// Mapping categories to background images
+const categoryBackgrounds: Record<string, string> = {
+  "أدعية ليلة القدر": "https://images.unsplash.com/photo-1564121211835-e88c852648ab?auto=format&fit=crop&q=80&w=800",
+  "أدعية قرآنية": "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=800",
+  "أدعية نبوية": "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=800",
+  "أذكار التسبيح": "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=80&w=800",
+  "أدعية شاملة": "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&q=80&w=800",
+  "أدعية للمتوفين": "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800",
+  "أدعية القبر والآخرة": "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=800",
+  "أدعية للرزق والمال": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800",
+  "أدعية الجمال والبشرة": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=800",
+  "أدعية الشعر": "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&q=80&w=800",
+  "أدعية الزواج والحب": "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800",
+  "أدعية النجاح": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800",
+  "أدعية للوطن العربي": "https://images.unsplash.com/photo-1512909006721-3d6018887183?auto=format&fit=crop&q=80&w=800",
+  "أدعية لمصر": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&q=80&w=800"
+};
+
+const defaultBg = "https://images.unsplash.com/photo-1469041797191-50ace28483c3?auto=format&fit=crop&q=80&w=800";
 
 export function ReflectionSection() {
   const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string } | null>(null);
@@ -29,11 +49,13 @@ export function ReflectionSection() {
     setReflection(e.target.value);
   }, [setReflection]);
 
-  const filteredDuas = allDuas.filter(dua => {
-    const matchesSearch = dua.text.includes(searchQuery) || (dua.source && dua.source.includes(searchQuery));
-    const matchesCategory = selectedCategory === 'الكل' || dua.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  const filteredDuas = useMemo(() => {
+    return allDuas.filter(dua => {
+      const matchesSearch = dua.text.includes(searchQuery) || (dua.source && dua.source.includes(searchQuery));
+      const matchesCategory = selectedCategory === 'الكل' || dua.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    });
+  }, [searchQuery, selectedCategory]);
 
   const addDuaToReflection = (duaText: string) => {
     setReflection((prev) => prev + (prev ? '\n\n' : '') + duaText);
@@ -72,10 +94,10 @@ export function ReflectionSection() {
           {/* Left Side: Reflection Area */}
           <div className={`transition-all duration-1000 delay-200 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'}`}>
             <div className={`
-              glass-strong rounded-3xl p-1 transition-all duration-500
+              glass-strong rounded-3xl p-1 transition-all duration-500 h-full
               ${isFocused ? 'shadow-gold-lg' : ''}
             `}>
-              <div className="bg-black/40 rounded-[22px] p-6 md:p-8">
+              <div className="bg-black/40 rounded-[22px] p-6 md:p-8 h-full flex flex-col">
                 <div className="flex items-center gap-3 mb-6">
                   <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center">
                     <PenLine className="w-5 h-5 text-gold" />
@@ -86,14 +108,14 @@ export function ReflectionSection() {
                   </div>
                 </div>
 
-                <div className="relative">
+                <div className="relative flex-1">
                   <textarea
                     value={reflection}
                     onChange={handleChange}
                     onFocus={() => setIsFocused(true)}
                     onBlur={() => setIsFocused(false)}
                     placeholder="يا الله، أسألك...&#10;&#10;اكتب دعواتك هنا، فإن الله يستجيب لعباده في جوف الليل..."
-                    className="input-spiritual min-h-[350px] resize-none text-lg leading-relaxed font-amiri"
+                    className="input-spiritual min-h-[400px] h-full resize-none text-lg leading-relaxed font-amiri"
                     dir="rtl"
                   />
                   <div className="absolute bottom-4 left-4 text-white/30 text-sm">
@@ -130,7 +152,7 @@ export function ReflectionSection() {
             </div>
           </div>
 
-          {/* Right Side: Dua Encyclopedia */}
+          {/* Right Side: Dua Encyclopedia with Tabs */}
           <div className={`transition-all duration-1000 delay-400 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'}`}>
             <div className="glass-strong rounded-3xl p-6 h-full flex flex-col">
               <div className="flex items-center gap-3 mb-6">
@@ -140,78 +162,95 @@ export function ReflectionSection() {
                 <h3 className="text-gold font-semibold">موسوعة الأدعية</h3>
               </div>
 
-              {/* Search and Filter */}
-              <div className="space-y-4 mb-6">
-                <div className="relative">
-                  <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-                  <input
-                    type="text"
-                    placeholder="ابحث عن دعاء..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pr-10 pl-4 text-white focus:border-gold/50 outline-none transition-colors"
-                    dir="rtl"
-                  />
-                </div>
-                
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      onClick={() => setSelectedCategory('الكل')}
-                      className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === 'الكل' ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
-                    >
-                      الكل
-                    </button>
-                    {duaCategories.map(cat => (
-                      <button
-                        key={cat}
-                        onClick={() => setSelectedCategory(cat)}
-                        className={`px-3 py-1 rounded-full text-xs transition-colors ${selectedCategory === cat ? 'bg-gold text-black' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
-                      >
-                        {cat}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  {selectedCategory !== 'الكل' && categoryComments[selectedCategory] && (
-                    <div className="mt-2 text-gold/80 text-sm font-amiri italic animate-fade-in">
-                      ✨ {categoryComments[selectedCategory]}
-                    </div>
-                  )}
+              {/* Search */}
+              <div className="relative mb-6">
+                <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                <input
+                  type="text"
+                  placeholder="ابحث عن دعاء..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pr-10 pl-4 text-white focus:border-gold/50 outline-none transition-colors"
+                  dir="rtl"
+                />
               </div>
 
-              {/* Dua List */}
-              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2 max-h-[400px]">
+              {/* Categories Tabs */}
+              <div className="relative mb-6 group">
+                <div className="flex overflow-x-auto custom-scrollbar gap-2 pb-2 mask-fade-edges">
+                  <button
+                    onClick={() => setSelectedCategory('الكل')}
+                    className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === 'الكل' ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                  >
+                    الكل
+                  </button>
+                  {duaCategories.map(cat => (
+                    <button
+                      key={cat}
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === cat ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {selectedCategory !== 'الكل' && categoryComments[selectedCategory] && (
+                <div className="mb-4 text-gold/80 text-sm font-amiri italic animate-fade-in flex items-center gap-2">
+                  <Sparkles className="w-3 h-3" />
+                  {categoryComments[selectedCategory]}
+                </div>
+              )}
+
+              {/* Dua List with Image Backgrounds */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar space-y-4 pr-2 max-h-[500px]">
                 {filteredDuas.length > 0 ? (
                   filteredDuas.map((dua) => (
                     <div
                       key={dua.id}
-                      className="glass rounded-xl p-4 hover:border-gold/30 transition-all cursor-pointer group"
+                      className="relative overflow-hidden rounded-2xl border border-white/10 hover:border-gold/50 transition-all duration-500 cursor-pointer group"
                       onClick={() => addDuaToReflection(dua.text)}
                     >
-                      <div className="flex justify-between items-start gap-4 mb-2">
-                        <p className="text-white/80 font-amiri text-lg group-hover:text-gold transition-colors leading-relaxed flex-1" dir="rtl">
-                          {dua.text}
-                        </p>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setActiveStoryDua({ text: dua.text, category: dua.category });
-                          }}
-                          className="p-2 rounded-lg bg-gold/5 text-gold/40 hover:text-gold hover:bg-gold/10 transition-all"
-                          title="مشاركة كستوري"
-                        >
-                          <Share2 className="w-4 h-4" />
-                        </button>
+                      {/* Image Background */}
+                      <div 
+                        className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-110"
+                        style={{
+                          backgroundImage: `url(${categoryBackgrounds[dua.category] || defaultBg})`,
+                          backgroundSize: 'cover',
+                          backgroundPosition: 'center',
+                        }}
+                      />
+                      {/* Dark Overlay */}
+                      <div className="absolute inset-0 z-10 bg-black/70 group-hover:bg-black/60 transition-colors duration-500" />
+                      
+                      <div className="relative z-20 p-5">
+                        <div className="flex justify-between items-start gap-4 mb-3">
+                          <p className="text-white font-amiri text-xl group-hover:text-gold transition-colors leading-relaxed flex-1 drop-shadow-lg" dir="rtl">
+                            {dua.text}
+                          </p>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setActiveStoryDua({ text: dua.text, category: dua.category });
+                            }}
+                            className="p-2 rounded-lg bg-white/10 text-white/40 hover:text-gold hover:bg-gold/20 transition-all backdrop-blur-md"
+                            title="مشاركة كستوري"
+                          >
+                            <Share2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gold font-semibold text-xs bg-black/50 px-3 py-1 rounded-full border border-gold/30 backdrop-blur-sm">
+                            {dua.category}
+                          </span>
+                          {dua.source && (
+                            <span className="text-white/60 text-[10px] bg-black/30 px-2 py-0.5 rounded backdrop-blur-sm">
+                              {dua.source}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gold/60 text-xs bg-gold/5 px-2 py-0.5 rounded-full">{dua.category}</span>
-                        {dua.source && <span className="text-white/30 text-[10px]">{dua.source}</span>}
-                      </div>
-                      {dua.benefit && (
-                        <p className="text-white/40 text-[10px] mt-2 italic border-t border-white/5 pt-2">
-                          {dua.benefit}
-                        </p>
-                      )}
                     </div>
                   ))
                 ) : (
