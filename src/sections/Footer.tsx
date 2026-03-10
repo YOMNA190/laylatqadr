@@ -84,9 +84,12 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Dua */}
+        {/* Special Dua for Yumna */}
         <div className="mt-8 text-center">
-          <p className="text-gold/40 text-sm font-amiri">
+          <p className="text-gold text-lg font-amiri font-bold animate-pulse">
+            اللهم الخير والثراء الفاحش ليُمنى 💚✨
+          </p>
+          <p className="text-gold/60 text-xs font-amiri mt-2">
             اللهم تقبل منا صالح الأعمال
           </p>
         </div>
