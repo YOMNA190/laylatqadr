@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react';
 import { Moon, Menu, X } from 'lucide-react';
 
 const navItems = [
-  { label: 'الرئيسية', href: '#hero' },
+  { label: 'الرئيسية', href: '#home' },
   { label: 'رحلة العبادة', href: '#worship' },
   { label: 'العشر الأواخر', href: '#timeline' },
   { label: 'ختم القرآن', href: '#khatma' },
   { label: 'المسبحة', href: '#tasbeeh' },
-  { label: 'الخواطر', href: '#reflection' },
-  { label: 'الأمنيات', href: '#wishbox' },
+  { label: 'الأدعية', href: '#duas' },
+  { label: 'التحفيز', href: '#motivation' },
+  { label: 'الأمنيات', href: '#wishes' },
   { label: 'الإحصائيات', href: '#stats' },
   { label: 'المشاركة', href: '#share' },
 ];
@@ -26,11 +27,8 @@ export function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setIsMobileMenuOpen(false);
   };
 
@@ -47,8 +45,8 @@ export function Navigation() {
             <div className="flex items-center justify-between">
               {/* Logo */}
               <a 
-                href="#hero" 
-                onClick={(e) => { e.preventDefault(); scrollToSection('#hero'); }}
+                href="#"
+                onClick={(e) => { e.preventDefault(); scrollToTop(); }}
                 className="flex items-center gap-2"
               >
                 <Moon className="w-6 h-6 text-gold" />
@@ -56,13 +54,13 @@ export function Navigation() {
               </a>
 
               {/* Desktop Navigation */}
-              <div className="hidden lg:flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-2">
                 {navItems.map((item) => (
                   <a
                     key={item.href}
                     href={item.href}
-                    onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                    className="text-white/70 hover:text-gold transition-colors text-xs whitespace-nowrap"
+                    onClick={(e) => { e.preventDefault(); scrollToTop(); }}
+                    className="text-white/70 hover:text-gold transition-colors text-xs whitespace-nowrap px-3 py-1 rounded-lg hover:bg-gold/10"
                   >
                     {item.label}
                   </a>
@@ -92,8 +90,8 @@ export function Navigation() {
               <a
                 key={item.href}
                 href={item.href}
-                onClick={(e) => { e.preventDefault(); scrollToSection(item.href); }}
-                className="block py-2 px-4 rounded-lg text-white/70 hover:text-gold hover:bg-gold/10 transition-colors"
+                onClick={(e) => { e.preventDefault(); scrollToTop(); }}
+                className="block py-2 px-4 rounded-lg text-white/70 hover:text-gold hover:bg-gold/10 transition-colors text-sm"
               >
                 {item.label}
               </a>

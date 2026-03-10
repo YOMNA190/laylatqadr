@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { Navigation } from './components/Navigation';
 import { Particles } from './components/Particles';
 import { Hero } from './sections/Hero';
@@ -12,38 +12,61 @@ import { WishBox } from './sections/WishBox';
 import { PersonalStats } from './sections/PersonalStats';
 import { QuranKhatma } from './sections/QuranKhatma';
 import { Footer } from './sections/Footer';
+import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift } from 'lucide-react';
 import './App.css';
 
+type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'motivation' | 'wishes' | 'stats' | 'share';
+
+interface Tab {
+  id: TabType;
+  label: string;
+  icon: React.ElementType;
+  component: React.ComponentType;
+}
+
+const tabs: Tab[] = [
+  { id: 'home', label: 'الرئيسية', icon: Moon, component: Hero },
+  { id: 'worship', label: 'رحلة العبادة', icon: Heart, component: WorshipTracker },
+  { id: 'timeline', label: 'العشر الأواخر', icon: Zap, component: NightTimeline },
+  { id: 'khatma', label: 'ختم القرآن', icon: BookOpen, component: QuranKhatma },
+  { id: 'tasbeeh', label: 'المسبحة', icon: Zap, component: TasbeehCounter },
+  { id: 'duas', label: 'الأدعية', icon: BookOpen, component: ReflectionSection },
+  { id: 'motivation', label: 'التحفيز', icon: Heart, component: MotivationEngine },
+  { id: 'wishes', label: 'الأمنيات', icon: Gift, component: WishBox },
+  { id: 'stats', label: 'الإحصائيات', icon: BarChart3, component: PersonalStats },
+  { id: 'share', label: 'المشاركة', icon: Share2, component: ShareFeature },
+];
+
 function App() {
+  const [activeTab, setActiveTab] = useState<TabType>('home');
+  const [isScrolled, setIsScrolled] = useState(false);
+
   // Keyboard shortcut for tasbeeh counter
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Space bar to increment tasbeeh when on that section
-      if (e.code === 'Space' && !e.repeat) {
-        const tasbeehSection = document.getElementById('tasbeeh');
-        if (tasbeehSection) {
-          const rect = tasbeehSection.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            e.preventDefault();
-            const tapButton = tasbeehSection.querySelector('.tasbeeh-button') as HTMLButtonElement;
-            if (tapButton) {
-              tapButton.click();
-            }
-          }
+      if (e.code === 'Space' && !e.repeat && activeTab === 'tasbeeh') {
+        e.preventDefault();
+        const tapButton = document.querySelector('.tasbeeh-button') as HTMLButtonElement;
+        if (tapButton) {
+          tapButton.click();
         }
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeTab]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const scrollToWorship = useCallback(() => {
-    const element = document.getElementById('worship');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, []);
+  const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || Hero;
 
   return (
     <div className="relative min-h-screen bg-black overflow-x-hidden" dir="rtl">
@@ -61,41 +84,47 @@ function App() {
 
       {/* Main Content */}
       <main className="relative z-10">
-        {/* Hero Section */}
-        <div id="hero">
-          <Hero onBegin={scrollToWorship} />
+        {/* Active Tab Content */}
+        <div className="min-h-screen">
+          <ActiveComponent />
         </div>
-
-        {/* Worship Journey Tracker */}
-        <WorshipTracker />
-
-        {/* Night Timeline */}
-        <NightTimeline />
-
-        {/* Quran Khatma Section */}
-        <QuranKhatma />
-
-        {/* Tasbeeh Counter */}
-        <TasbeehCounter />
-
-        {/* Reflection Section */}
-        <ReflectionSection />
-
-        {/* Motivation Engine */}
-        <MotivationEngine />
-
-        {/* Wish Box */}
-        <WishBox />
-
-        {/* Personal Stats */}
-        <PersonalStats />
-
-        {/* Share Feature */}
-        <ShareFeature />
 
         {/* Footer */}
         <Footer />
       </main>
+
+      {/* Bottom Tab Navigation */}
+      <div className={`fixed bottom-0 left-0 right-0 z-40 transition-all duration-500 ${isScrolled ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'}`}>
+        <div className="glass-strong mx-4 mb-4 rounded-3xl">
+          <div className="flex items-center justify-between overflow-x-auto custom-scrollbar px-2 py-3 gap-1">
+            {tabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveTab(tab.id);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`flex flex-col items-center gap-1 px-3 py-2 rounded-2xl transition-all duration-300 whitespace-nowrap text-xs ${
+                    isActive
+                      ? 'bg-gold text-black shadow-gold-sm'
+                      : 'text-white/60 hover:text-gold hover:bg-gold/10'
+                  }`}
+                  title={tab.label}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span className="hidden sm:inline text-[10px]">{tab.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Spacer for bottom navigation */}
+      <div className="h-24" />
     </div>
   );
 }
