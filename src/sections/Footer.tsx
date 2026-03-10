@@ -84,21 +84,7 @@ export function Footer() {
           </p>
         </div>
 
-        {/* Special Dua for Yomna */}
-        <div className="mt-12 text-center">
-          <div className="inline-block bg-gradient-to-r from-gold/20 to-gold/10 rounded-3xl p-8 border border-gold/30 max-w-2xl">
-            <p className="text-gold text-sm font-amiri mb-3 opacity-80">دعاء خاص</p>
-            <p className="text-gold text-2xl font-amiri font-bold mb-4 animate-pulse">
-              اللهم يا ودود يا ودود
-            </p>
-            <p className="text-gold/90 text-lg font-amiri leading-relaxed mb-4">
-              اللهم يا رب الأرباب، يا ملك الملوك، يا ذا الجلال والإكرام، أسألك بأسمائك الحسنى وصفاتك العليا أن تحفظ يُمنى وتحميها، وأن تملأ قلبها بالسعادة والطمأنينة، وأن ترزقها رزقاً واسعاً حلالاً طيباً من حيث لا تحتسب، وأن تجعل كل خطواتها خطوات موفقة نحو الخير والسعادة.
-            </p>
-            <p className="text-gold/70 text-sm font-amiri italic">
-              اللهم آمين آمين يا رب العالمين
-            </p>
-          </div>
-        </div>
+
       </div>
     </footer>
   );

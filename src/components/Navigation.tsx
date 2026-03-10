@@ -4,6 +4,7 @@ import { Moon, Menu, X } from 'lucide-react';
 const navItems = [
   { label: 'الرئيسية', href: '#home' },
   { label: 'رحلة العبادة', href: '#worship' },
+  { label: 'عشر أفكار', href: '#ideas' },
   { label: 'العشر الأواخر', href: '#timeline' },
   { label: 'ختم القرآن', href: '#khatma' },
   { label: 'المسبحة', href: '#tasbeeh' },

@@ -16,7 +16,7 @@ const PersonalStats = lazy(() => import('./sections/PersonalStats').then(m => ({
 const QuranKhatma = lazy(() => import('./sections/QuranKhatma').then(m => ({ default: m.QuranKhatma })));
 const Footer = lazy(() => import('./sections/Footer').then(m => ({ default: m.Footer })));
 const CommunityDuas = lazy(() => import('./sections/CommunityDuas').then(m => ({ default: m.CommunityDuas })));
-import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift, MessageSquare, Sparkles } from 'lucide-react';
+import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift, MessageSquare, Sparkles, X } from 'lucide-react';
 import './App.css';
 
 type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'community' | 'motivation' | 'wishes' | 'stats' | 'share' | 'ideas';
@@ -53,6 +53,7 @@ const tabs: Tab[] = [
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
 
   const handleBeginWorship = () => {
     setActiveTab('worship');
@@ -101,11 +102,18 @@ function App() {
       <Navigation />
 
       {/* Personalized Dua Banner */}
-      {isScrolled && (
+      {isScrolled && showBanner && (
         <div className="fixed top-20 left-0 right-0 z-40 pointer-events-none">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="glass-strong rounded-2xl p-4 md:p-6 text-center pointer-events-auto animate-pulse-glow">
-              <p className="text-gold font-amiri text-lg md:text-xl leading-relaxed drop-shadow-lg">
+            <div className="relative glass-strong rounded-2xl p-4 md:p-6 text-center pointer-events-auto animate-pulse-glow">
+              <button 
+                onClick={() => setShowBanner(false)}
+                className="absolute top-2 left-2 p-1 rounded-full bg-gold/10 text-gold hover:bg-gold/20 transition-colors"
+                title="إغلاق"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <p className="text-gold font-amiri text-lg md:text-xl leading-relaxed drop-shadow-lg px-6">
                 يا رب يمنى تدخل الجنة وتبقي مليونيرة وتحققي كل أحلامك وتكوني أسعد إنسانة في الدنيا والآخرة
               </p>
             </div>
