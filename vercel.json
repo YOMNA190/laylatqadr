@@ -1,7 +1,10 @@
 {
   "version": 2,
-  "public": true,
   "cleanUrls": true,
+  "trailingSlash": false,
+  "framework": null,
+  "buildCommand": null,
+  "installCommand": "echo No dependencies needed",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
