@@ -2,7 +2,6 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { Navigation } from './components/Navigation';
 import { Particles } from './components/Particles';
 import { Hero } from './sections/Hero';
-import { TenIdeas } from './sections/TenIdeas';
 
 // Lazy load heavy components
 const TenIdeasLazy = lazy(() => import('./sections/TenIdeas').then(m => ({ default: m.TenIdeas })));
