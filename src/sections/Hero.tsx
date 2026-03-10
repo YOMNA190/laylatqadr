@@ -126,11 +126,11 @@ export function Hero({ onBegin = () => {} }: HeroProps) {
         >
           <button
             onClick={onBegin}
-            className="group relative btn-gold text-lg font-semibold flex items-center gap-3 mx-auto"
+            className="group relative btn-gold text-lg md:text-xl font-semibold flex items-center gap-3 mx-auto px-8 md:px-10 py-4 md:py-5 shadow-lg hover:shadow-gold-lg transition-all duration-300"
           >
-            <Sparkles className="w-5 h-5 transition-transform group-hover:rotate-12" />
+            <Sparkles className="w-5 h-5 md:w-6 md:h-6 transition-transform group-hover:rotate-12 group-hover:scale-110" />
             ابدأ ليلة العبادة
-            <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity blur-sm" />
           </button>
         </div>
 

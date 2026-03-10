@@ -169,31 +169,29 @@ export function ReflectionSection() {
                 />
               </div>
 
-              {/* Categories Tabs */}
-              <div className="relative mb-6 group">
-                <div className="flex overflow-x-auto custom-scrollbar gap-2 pb-2 mask-fade-edges">
+              {/* Categories Grid */}
+              <div className="mb-6 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <button
+                  onClick={() => {
+                    setSelectedCategory('الكل');
+                    setDisplayedCount(DUAS_PER_PAGE);
+                  }}
+                  className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${selectedCategory === 'الكل' ? 'bg-gold text-black shadow-gold-sm scale-105' : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-gold'}`}
+                >
+                  الكل
+                </button>
+                {duaCategories.map(cat => (
                   <button
+                    key={cat}
                     onClick={() => {
-                      setSelectedCategory('الكل');
+                      setSelectedCategory(cat);
                       setDisplayedCount(DUAS_PER_PAGE);
                     }}
-                    className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === 'الكل' ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
+                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${selectedCategory === cat ? 'bg-gold text-black shadow-gold-sm scale-105' : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-gold'}`}
                   >
-                    الكل
+                    {cat}
                   </button>
-                  {duaCategories.map(cat => (
-                    <button
-                      key={cat}
-                      onClick={() => {
-                        setSelectedCategory(cat);
-                        setDisplayedCount(DUAS_PER_PAGE);
-                      }}
-                      className={`px-4 py-2 rounded-full text-sm whitespace-nowrap transition-all duration-300 ${selectedCategory === cat ? 'bg-gold text-black font-bold shadow-gold-sm' : 'bg-white/5 text-white/60 hover:bg-white/10'}`}
-                    >
-                      {cat}
-                    </button>
-                  ))}
-                </div>
+                ))}
               </div>
               
               {selectedCategory !== 'الكل' && categoryComments[selectedCategory] && (

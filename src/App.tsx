@@ -2,8 +2,10 @@ import { useEffect, useState, lazy, Suspense } from 'react';
 import { Navigation } from './components/Navigation';
 import { Particles } from './components/Particles';
 import { Hero } from './sections/Hero';
+import { TenIdeas } from './sections/TenIdeas';
 
 // Lazy load heavy components
+const TenIdeasLazy = lazy(() => import('./sections/TenIdeas').then(m => ({ default: m.TenIdeas })));
 const WorshipTracker = lazy(() => import('./sections/WorshipTracker').then(m => ({ default: m.WorshipTracker })));
 const NightTimeline = lazy(() => import('./sections/NightTimeline').then(m => ({ default: m.NightTimeline })));
 const TasbeehCounter = lazy(() => import('./sections/TasbeehCounter').then(m => ({ default: m.TasbeehCounter })));
@@ -15,10 +17,10 @@ const PersonalStats = lazy(() => import('./sections/PersonalStats').then(m => ({
 const QuranKhatma = lazy(() => import('./sections/QuranKhatma').then(m => ({ default: m.QuranKhatma })));
 const Footer = lazy(() => import('./sections/Footer').then(m => ({ default: m.Footer })));
 const CommunityDuas = lazy(() => import('./sections/CommunityDuas').then(m => ({ default: m.CommunityDuas })));
-import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift, MessageSquare } from 'lucide-react';
+import { Moon, BookOpen, Zap, Heart, Share2, BarChart3, Gift, MessageSquare, Sparkles } from 'lucide-react';
 import './App.css';
 
-type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'community' | 'motivation' | 'wishes' | 'stats' | 'share';
+type TabType = 'home' | 'worship' | 'timeline' | 'khatma' | 'tasbeeh' | 'duas' | 'community' | 'motivation' | 'wishes' | 'stats' | 'share' | 'ideas';
 
 interface Tab {
   id: TabType;
@@ -37,6 +39,7 @@ const LoadingFallback = () => (
 const tabs: Tab[] = [
   { id: 'home', label: 'الرئيسية', icon: Moon, component: Hero },
   { id: 'worship', label: 'رحلة العبادة', icon: Heart, component: WorshipTracker },
+  { id: 'ideas', label: 'عشر أفكار', icon: Sparkles, component: TenIdeasLazy },
   { id: 'timeline', label: 'العشر الأواخر', icon: Zap, component: NightTimeline },
   { id: 'khatma', label: 'ختم القرآن', icon: BookOpen, component: QuranKhatma },
   { id: 'tasbeeh', label: 'المسبحة', icon: Zap, component: TasbeehCounter },
@@ -51,6 +54,11 @@ const tabs: Tab[] = [
 function App() {
   const [activeTab, setActiveTab] = useState<TabType>('home');
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleBeginWorship = () => {
+    setActiveTab('worship');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   // Keyboard shortcut for tasbeeh counter
   useEffect(() => {
@@ -93,12 +101,25 @@ function App() {
       {/* Navigation */}
       <Navigation />
 
+      {/* Personalized Dua Banner */}
+      {isScrolled && (
+        <div className="fixed top-20 left-0 right-0 z-40 pointer-events-none">
+          <div className="max-w-4xl mx-auto px-4">
+            <div className="glass-strong rounded-2xl p-4 md:p-6 text-center pointer-events-auto animate-pulse-glow">
+              <p className="text-gold font-amiri text-lg md:text-xl leading-relaxed drop-shadow-lg">
+                يا رب يمنى تدخل الجنة وتبقي مليونيرة وتحققي كل أحلامك وتكوني أسعد إنسانة في الدنيا والآخرة
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <main className="relative z-10">
         {/* Active Tab Content */}
         <div className="min-h-screen">
           <Suspense fallback={<LoadingFallback />}>
-            <ActiveComponent />
+            {activeTab === 'home' ? <Hero onBegin={handleBeginWorship} /> : <ActiveComponent />}
           </Suspense>
         </div>
 

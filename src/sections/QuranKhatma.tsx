@@ -139,12 +139,12 @@ export function QuranKhatma() {
               </div>
 
               <div className="overflow-x-auto custom-scrollbar">
-                <table className="w-full text-right font-amiri text-xl border-collapse">
+                <table className="w-full text-right font-amiri text-lg border-collapse">
                   <thead>
-                    <tr className="bg-gold/10 text-gold border-b border-gold/20">
-                      <th className="py-4 px-6 font-bold rounded-tr-xl">اليوم</th>
-                      <th className="py-4 px-6 font-bold">المقدار</th>
-                      <th className="py-4 px-6 font-bold text-center rounded-tl-xl">الحالة</th>
+                    <tr className="bg-gradient-to-r from-gold/20 via-gold/15 to-gold/20 text-gold border-b-2 border-gold/40">
+                      <th className="py-4 px-6 font-bold rounded-tr-2xl text-base md:text-lg">اليوم</th>
+                      <th className="py-4 px-6 font-bold text-base md:text-lg">المقدار</th>
+                      <th className="py-4 px-6 font-bold text-center rounded-tl-2xl text-base md:text-lg">الحالة</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gold/10">
@@ -153,16 +153,16 @@ export function QuranKhatma() {
                       return (
                         <tr 
                           key={index} 
-                          className={`transition-colors cursor-pointer hover:bg-gold/5 ${isCompleted ? 'bg-gold/10' : ''}`}
+                          className={`transition-all duration-300 cursor-pointer hover:bg-gold/10 hover:shadow-gold-sm ${isCompleted ? 'bg-gradient-to-r from-gold/15 to-gold/5 border-l-4 border-gold' : 'hover:border-l-4 hover:border-gold/50'}`}
                           onClick={() => toggleDay(index)}
                         >
-                          <td className="py-4 px-6 text-gold font-bold">{item.day}</td>
-                          <td className={`py-4 px-6 text-white/90 ${isCompleted ? 'line-through opacity-50' : ''}`}>
+                          <td className={`py-5 px-6 font-bold text-base md:text-lg ${isCompleted ? 'text-gold/80' : 'text-gold'}`}>{item.day}</td>
+                          <td className={`py-5 px-6 text-base md:text-lg transition-all ${isCompleted ? 'line-through opacity-40 text-white/50' : 'text-white/90'}`}>
                             {item.content}
                           </td>
-                          <td className="py-4 px-6 text-center">
-                            <div className={`inline-flex items-center justify-center w-8 h-8 rounded-full border-2 transition-all ${isCompleted ? 'bg-gold border-gold text-black' : 'border-gold/30 text-gold/30'}`}>
-                              <CheckCircle2 className="w-5 h-5" />
+                          <td className="py-5 px-6 text-center">
+                            <div className={`inline-flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-300 ${isCompleted ? 'bg-gold/30 border-gold text-gold shadow-gold-sm scale-110' : 'border-gold/30 text-gold/30 hover:border-gold/60 hover:text-gold/60'}`}>
+                              <CheckCircle2 className="w-6 h-6" />
                             </div>
                           </td>
                         </tr>
