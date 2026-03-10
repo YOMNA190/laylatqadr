@@ -1,0 +1,8 @@
+{
+  "name": "laylatqadr",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "mkdir -p dist && cp -rf assets images index.html dist/ || true",
+    "install": "echo No dependencies needed"
+  }
+}
