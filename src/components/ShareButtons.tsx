@@ -12,8 +12,8 @@ interface ShareButtonsProps {
 
 export function ShareButtons({
   title = 'ليلة القدر 2026',
-  text = 'اكتشف موقع ليلة القدر - أداة روحانية متكاملة لتسبيح واستغفار وأدعية ليلة القدر',
-  url = typeof window !== 'undefined' ? window.location.href : 'https://laylatqadr.vercel.app/',
+  text = 'قال رسول الله ﷺ: "مَنْ قَامَ لَيْلَةَ الْقَدْرِ إِيمَانًا وَاحْتِسَابًا غُفِرَ لَهُ مَا تَقَدَّمَ مِنْ ذَنْبِهِ".\n\nاكتشف أدعية ليلة القدر وتابع عباداتك عبر موقع ليلة القدر:',
+  url = 'https://laylatqadr.vercel.app/',
   showLabel = true,
   className = '',
 }: ShareButtonsProps) {

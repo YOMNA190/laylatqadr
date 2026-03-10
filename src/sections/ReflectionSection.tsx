@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { PenLine, Sparkles, Save, Trash2, Search, BookOpen } from 'lucide-react';
+import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2 } from 'lucide-react';
 import { allDuas, duaCategories } from '../lib/duaData';
+import { DuaStoryCard } from '../components/DuaStoryCard';
 
 export function ReflectionSection() {
+  const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string } | null>(null);
   const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const [reflection, setReflection] = useLocalStorage<string>('laylatul-qadr-reflection', '');
   const [isFocused, setIsFocused] = useState(false);
@@ -180,9 +182,21 @@ export function ReflectionSection() {
                       className="glass rounded-xl p-4 hover:border-gold/30 transition-all cursor-pointer group"
                       onClick={() => addDuaToReflection(dua.text)}
                     >
-                      <p className="text-white/80 font-amiri text-lg mb-2 group-hover:text-gold transition-colors leading-relaxed" dir="rtl">
-                        {dua.text}
-                      </p>
+                      <div className="flex justify-between items-start gap-4 mb-2">
+                        <p className="text-white/80 font-amiri text-lg group-hover:text-gold transition-colors leading-relaxed flex-1" dir="rtl">
+                          {dua.text}
+                        </p>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setActiveStoryDua({ text: dua.text, category: dua.category });
+                          }}
+                          className="p-2 rounded-lg bg-gold/5 text-gold/40 hover:text-gold hover:bg-gold/10 transition-all"
+                          title="مشاركة كستوري"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </button>
+                      </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gold/60 text-xs bg-gold/5 px-2 py-0.5 rounded-full">{dua.category}</span>
                         {dua.source && <span className="text-white/30 text-[10px]">{dua.source}</span>}
@@ -208,6 +222,15 @@ export function ReflectionSection() {
           </div>
         </div>
       </div>
+
+      {/* Dua Story Modal */}
+      {activeStoryDua && (
+        <DuaStoryCard
+          duaText={activeStoryDua.text}
+          category={activeStoryDua.category}
+          onClose={() => setActiveStoryDua(null)}
+        />
+      )}
     </section>
   );
 }
