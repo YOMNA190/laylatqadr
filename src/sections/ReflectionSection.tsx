@@ -1,32 +1,14 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { useLocalStorage } from '../hooks/useLocalStorage';
-import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2, ChevronLeft, ChevronRight } from 'lucide-react';
-import { allDuas, duaCategories, categoryComments } from '../lib/duaData';
+import { PenLine, Sparkles, Save, Trash2, Search, BookOpen, Share2 } from 'lucide-react';
+import { allDuas, duaCategories, categoryComments, categoryImages } from '../lib/duaData';
 import { DuaStoryCard } from '../components/DuaStoryCard';
 
-// Mapping categories to background images
-const categoryBackgrounds: Record<string, string> = {
-  "أدعية ليلة القدر": "https://images.unsplash.com/photo-1564121211835-e88c852648ab?auto=format&fit=crop&q=80&w=800",
-  "أدعية قرآنية": "https://images.unsplash.com/photo-1542810634-71277d95dcbb?auto=format&fit=crop&q=80&w=800",
-  "أدعية نبوية": "https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?auto=format&fit=crop&q=80&w=800",
-  "أذكار التسبيح": "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?auto=format&fit=crop&q=80&w=800",
-  "أدعية شاملة": "https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&q=80&w=800",
-  "أدعية للمتوفين": "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?auto=format&fit=crop&q=80&w=800",
-  "أدعية القبر والآخرة": "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&q=80&w=800",
-  "أدعية للرزق والمال": "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&q=80&w=800",
-  "أدعية الجمال والبشرة": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=800",
-  "أدعية الشعر": "https://images.unsplash.com/photo-1560869713-7d0a29430803?auto=format&fit=crop&q=80&w=800",
-  "أدعية الزواج والحب": "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800",
-  "أدعية النجاح": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800",
-  "أدعية للوطن العربي": "https://images.unsplash.com/photo-1512909006721-3d6018887183?auto=format&fit=crop&q=80&w=800",
-  "أدعية لمصر": "https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&q=80&w=800"
-};
-
-const defaultBg = "https://images.unsplash.com/photo-1469041797191-50ace28483c3?auto=format&fit=crop&q=80&w=800";
+const defaultBg = "/images/hero-bg.jpg";
 
 export function ReflectionSection() {
-  const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string } | null>(null);
+  const [activeStoryDua, setActiveStoryDua] = useState<{ text: string; category: string; bgImage?: string } | null>(null);
   const { ref, isVisible } = useScrollReveal<HTMLElement>({ threshold: 0.1 });
   const [reflection, setReflection] = useLocalStorage<string>('laylatul-qadr-reflection', '');
   const [isFocused, setIsFocused] = useState(false);
@@ -216,7 +198,7 @@ export function ReflectionSection() {
                       <div 
                         className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-110"
                         style={{
-                          backgroundImage: `url(${categoryBackgrounds[dua.category] || defaultBg})`,
+                          backgroundImage: `url(${categoryImages[dua.category] || defaultBg})`,
                           backgroundSize: 'cover',
                           backgroundPosition: 'center',
                         }}
@@ -229,24 +211,28 @@ export function ReflectionSection() {
                           <p className="text-white font-amiri text-xl group-hover:text-gold transition-colors leading-relaxed flex-1 drop-shadow-lg" dir="rtl">
                             {dua.text}
                           </p>
-                          <button
+                          <button 
                             onClick={(e) => {
                               e.stopPropagation();
-                              setActiveStoryDua({ text: dua.text, category: dua.category });
+                              setActiveStoryDua({ 
+                                text: dua.text, 
+                                category: dua.category,
+                                bgImage: categoryImages[dua.category]
+                              });
                             }}
-                            className="p-2 rounded-lg bg-white/10 text-white/40 hover:text-gold hover:bg-gold/20 transition-all backdrop-blur-md"
-                            title="مشاركة كستوري"
+                            className="p-2 rounded-full bg-gold/10 text-gold hover:bg-gold hover:text-black transition-all"
+                            title="مشاركة كصورة"
                           >
                             <Share2 className="w-4 h-4" />
                           </button>
                         </div>
-                        <div className="flex justify-between items-center">
-                          <span className="text-gold font-semibold text-xs bg-black/50 px-3 py-1 rounded-full border border-gold/30 backdrop-blur-sm">
+                        <div className="flex items-center gap-2">
+                          <span className="text-gold/60 text-xs font-amiri px-2 py-0.5 rounded-full bg-gold/5 border border-gold/10">
                             {dua.category}
                           </span>
                           {dua.source && (
-                            <span className="text-white/60 text-[10px] bg-black/30 px-2 py-0.5 rounded backdrop-blur-sm">
-                              {dua.source}
+                            <span className="text-white/40 text-[10px] italic">
+                              المصدر: {dua.source}
                             </span>
                           )}
                         </div>
@@ -255,24 +241,21 @@ export function ReflectionSection() {
                   ))
                 ) : (
                   <div className="text-center py-12 text-white/40">
-                    <p>لا توجد نتائج للبحث</p>
+                    <p>لا توجد أدعية تطابق بحثك</p>
                   </div>
                 )}
               </div>
-              
-              <p className="text-white/30 text-[10px] mt-4 text-center">
-                * اضغط على الدعاء لإضافته إلى مفكرتك الخاصة
-              </p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Dua Story Modal */}
+      {/* Story Share Modal */}
       {activeStoryDua && (
         <DuaStoryCard
           duaText={activeStoryDua.text}
           category={activeStoryDua.category}
+          bgImage={activeStoryDua.bgImage}
           onClose={() => setActiveStoryDua(null)}
         />
       )}
