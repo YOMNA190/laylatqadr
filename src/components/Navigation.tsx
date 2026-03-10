@@ -5,6 +5,7 @@ const navItems = [
   { label: 'الرئيسية', href: '#hero' },
   { label: 'رحلة العبادة', href: '#worship' },
   { label: 'العشر الأواخر', href: '#timeline' },
+  { label: 'ختم القرآن', href: '#khatma' },
   { label: 'المسبحة', href: '#tasbeeh' },
   { label: 'الخواطر', href: '#reflection' },
   { label: 'الأمنيات', href: '#wishbox' },

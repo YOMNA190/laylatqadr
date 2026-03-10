@@ -10,6 +10,7 @@ import { MotivationEngine } from './sections/MotivationEngine';
 import { ShareFeature } from './sections/ShareFeature';
 import { WishBox } from './sections/WishBox';
 import { PersonalStats } from './sections/PersonalStats';
+import { QuranKhatma } from './sections/QuranKhatma';
 import { Footer } from './sections/Footer';
 import './App.css';
 
@@ -70,6 +71,9 @@ function App() {
 
         {/* Night Timeline */}
         <NightTimeline />
+
+        {/* Quran Khatma Section */}
+        <QuranKhatma />
 
         {/* Tasbeeh Counter */}
         <TasbeehCounter />
